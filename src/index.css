@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    /* ================================================= */
+    /* Light Theme (Still default for light mode) */
+    /* ================================================= */
+    --background: 0 0% 100%;       
+    --foreground: 222.2 84% 4.9%;  
+    --primary: 216 90% 50%;        
+    --primary-foreground: 0 0% 100%; 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 216 90% 50%; 
+    --radius: 0.5rem;
+  }
+  
+  .dark {
+    /* ================================================= */
+    /* Dark Theme (Deep Blue/Green - "الوان تحفة") */
+    /* ================================================= */
+
+    --background: 220 10% 5%;     /* Deep Dark Blue/Black */
+    --foreground: 210 40% 98%;    /* Off-White Text */
+ 
+    --primary: 150 70% 50%;       /* Vibrant Teal/Green as Primary */
+    --primary-foreground: 220 10% 5%; /* Dark text on bright primary */
+ 
+    --card: 220 10% 8%;           /* Slightly lighter than background for depth */
+    --card-foreground: 210 40% 98%;
+    --popover: 220 10% 8%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --secondary: 220 10% 12%;     /* Darker Secondary/Muted background */
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 220 10% 12%;
+    --muted-foreground: 215 15% 60%; /* Light grey muted text */
+ 
+    --accent: 220 10% 12%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 40.6%; /* Deep Red */
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 220 10% 12%;
+    --input: 220 10% 12%;
+    --ring: 150 70% 50%; /* Teal/Green Ring */
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    /* هذا الكلاس هو المسؤول عن لون الخلفية الرئيسي */
+    @apply bg-background text-foreground;
+  }
+}
