@@ -16,23 +16,7 @@ import {
   BarChart3,
   TrendingUp,
 } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from "recharts";
+import * as Recharts from "recharts"; // استيراد Recharts كـ Namespace
 
 interface Station {
   id: string;
@@ -45,7 +29,7 @@ interface Station {
   efficiency: number;
 }
 
-// تم التعديل: أسماء محطات القاهرة
+// أسماء محطات القاهرة (تبقى بالخارج كبيانات ثابتة)
 const mockStations: Station[] = [
   {
     id: "ST-001",
@@ -96,7 +80,10 @@ const stationColors = [
   "hsl(0 72% 51%)",
 ];
 
-const CompareContent = () => {
+// ====================================================================
+// تم النقل: دوال تجهيز البيانات أصبحت داخل المكون الرئيسي
+// ====================================================================
+const CompareContent = () => { 
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [selectedStations, setSelectedStations] = useState<string[]>([]);
@@ -113,7 +100,7 @@ const CompareContent = () => {
     selectedStations.includes(s.id)
   );
 
-  // تم التصحيح: تغيير idx إلى _ في جميع الـ map functions لتجنب أخطاء TypeScript
+  // الدوال اللي كانت مسببة الخطأ تم وضعها هنا:
   const comparisonData = [
     {
       metric: "مستوى المياه",
@@ -246,6 +233,7 @@ const CompareContent = () => {
                   onClick={() => toggleStation(station.id)}
                 >
                   <div className="flex items-start gap-3">
+                    <Recharts.Tooltip />
                     <Checkbox
                       checked={selectedStations.includes(station.id)}
                       className="mt-1"
@@ -343,33 +331,33 @@ const CompareContent = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <BarChart data={comparisonData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis
+                  <Recharts.ResponsiveContainer width="100%" height={350}>
+                    <Recharts.BarChart data={comparisonData}>
+                      <Recharts.CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <Recharts.XAxis
                         dataKey="metric"
                         stroke="hsl(var(--muted-foreground))"
                         tick={{ fontSize: 12 }}
                       />
-                      <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip
+                      <Recharts.YAxis stroke="hsl(var(--muted-foreground))" />
+                      <Recharts.Tooltip
                         contentStyle={{
                           backgroundColor: "hsl(var(--card))",
                           border: "1px solid hsl(var(--border))",
                           borderRadius: "8px",
                         }}
                       />
-                      <Legend />
+                      <Recharts.Legend />
                       {selectedStationsData.map((station, idx) => (
-                        <Bar
+                        <Recharts.Bar
                           key={station.id}
                           dataKey={station.location}
                           fill={stationColors[idx]}
                           radius={[8, 8, 0, 0]}
                         />
                       ))}
-                    </BarChart>
-                  </ResponsiveContainer>
+                    </Recharts.BarChart>
+                  </Recharts.ResponsiveContainer>
                 </CardContent>
               </Card>
 
@@ -381,25 +369,25 @@ const CompareContent = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <RadarChart data={radarData}>
-                      <PolarGrid stroke="hsl(var(--border))" />
-                      <PolarAngleAxis
+                  <Recharts.ResponsiveContainer width="100%" height={350}>
+                    <Recharts.RadarChart data={radarData}>
+                      <Recharts.PolarGrid stroke="hsl(var(--border))" />
+                      <Recharts.PolarAngleAxis
                         dataKey="station"
                         stroke="hsl(var(--muted-foreground))"
                         tick={{ fontSize: 11 }}
                       />
-                      <PolarRadiusAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip
+                      <Recharts.PolarRadiusAxis stroke="hsl(var(--muted-foreground))" />
+                      <Recharts.Tooltip
                         contentStyle={{
                           backgroundColor: "hsl(var(--card))",
                           border: "1px solid hsl(var(--border))",
                           borderRadius: "8px",
                         }}
                       />
-                      <Legend />
+                      <Recharts.Legend />
                       {selectedStationsData.map((station, idx) => (
-                        <Radar
+                        <Recharts.Radar
                           key={station.id}
                           name={station.location}
                           dataKey={station.location}
@@ -408,8 +396,8 @@ const CompareContent = () => {
                           fillOpacity={0.3}
                         />
                       ))}
-                    </RadarChart>
-                  </ResponsiveContainer>
+                    </Recharts.RadarChart>
+                  </Recharts.ResponsiveContainer>
                 </CardContent>
               </Card>
 

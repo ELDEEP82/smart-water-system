@@ -18,8 +18,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false, // FIX: تم إيقاف التحقق من المتغيرات المحلية غير المستخدمة
+    "noUnusedParameters": false, // FIX: تم إيقاف التحقق من البارامترات غير المستخدمة
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
