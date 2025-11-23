@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { OTPGate } from "@/components/OTPGate"; 
 import {
   ArrowLeft,
   Droplets,
@@ -44,11 +45,12 @@ interface Station {
   efficiency: number;
 }
 
+// تم التعديل: أسماء محطات القاهرة
 const mockStations: Station[] = [
   {
     id: "ST-001",
-    name: "محطة الضخ الرئيسية - القاهرة",
-    location: "القاهرة",
+    name: "محطة مياه القاهرة - المركزية",
+    location: "المركزية",
     waterLevel: 85,
     pressure: 4.2,
     temperature: 22,
@@ -57,8 +59,8 @@ const mockStations: Station[] = [
   },
   {
     id: "ST-002",
-    name: "محطة الضخ الشرقية - الإسكندرية",
-    location: "الإسكندرية",
+    name: "محطة مياه القاهرة - الغربية",
+    location: "الغربية",
     waterLevel: 65,
     pressure: 3.8,
     temperature: 24,
@@ -67,8 +69,8 @@ const mockStations: Station[] = [
   },
   {
     id: "ST-003",
-    name: "محطة الضخ الغربية - الجيزة",
-    location: "الجيزة",
+    name: "محطة مياه القاهرة - الشرقية",
+    location: "الشرقية",
     waterLevel: 92,
     pressure: 4.5,
     temperature: 21,
@@ -77,8 +79,8 @@ const mockStations: Station[] = [
   },
   {
     id: "ST-004",
-    name: "محطة الضخ الجنوبية - أسيوط",
-    location: "أسيوط",
+    name: "محطة مياه القاهرة - الجنوبية",
+    location: "الجنوبية",
     waterLevel: 45,
     pressure: 3.2,
     temperature: 26,
@@ -88,13 +90,13 @@ const mockStations: Station[] = [
 ];
 
 const stationColors = [
-  "hsl(200 95% 45%)",
+  "hsl(216 90% 50%)",
   "hsl(142 76% 36%)",
   "hsl(38 92% 50%)",
   "hsl(0 72% 51%)",
 ];
 
-const Compare = () => {
+const CompareContent = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [selectedStations, setSelectedStations] = useState<string[]>([]);
@@ -111,36 +113,36 @@ const Compare = () => {
     selectedStations.includes(s.id)
   );
 
-  // Prepare data for comparison charts
+  // تم التصحيح: تغيير idx إلى _ في جميع الـ map functions لتجنب أخطاء TypeScript
   const comparisonData = [
     {
       metric: "مستوى المياه",
       ...Object.fromEntries(
-        selectedStationsData.map((s) => [s.location, s.waterLevel])
+        selectedStationsData.map((s, _) => [s.location, s.waterLevel])
       ),
     },
     {
       metric: "الضغط",
       ...Object.fromEntries(
-        selectedStationsData.map((s) => [s.location, s.pressure * 20])
+        selectedStationsData.map((s, _) => [s.location, s.pressure * 20])
       ),
     },
     {
       metric: "الحرارة",
       ...Object.fromEntries(
-        selectedStationsData.map((s) => [s.location, s.temperature * 3])
+        selectedStationsData.map((s, _) => [s.location, s.temperature * 3])
       ),
     },
     {
       metric: "معدل التدفق",
       ...Object.fromEntries(
-        selectedStationsData.map((s) => [s.location, s.flowRate / 15])
+        selectedStationsData.map((s, _) => [s.location, s.flowRate / 15])
       ),
     },
     {
       metric: "الكفاءة",
       ...Object.fromEntries(
-        selectedStationsData.map((s) => [s.location, s.efficiency])
+        selectedStationsData.map((s, _) => [s.location, s.efficiency])
       ),
     },
   ];
@@ -158,7 +160,7 @@ const Compare = () => {
     {
       name: "مستوى المياه %",
       ...Object.fromEntries(
-        selectedStationsData.map((s, idx) => [
+        selectedStationsData.map((s, _) => [
           s.location,
           s.waterLevel,
         ])
@@ -167,7 +169,7 @@ const Compare = () => {
     {
       name: "الضغط (بار)",
       ...Object.fromEntries(
-        selectedStationsData.map((s, idx) => [
+        selectedStationsData.map((s, _) => [
           s.location,
           s.pressure,
         ])
@@ -176,7 +178,7 @@ const Compare = () => {
     {
       name: "درجة الحرارة °C",
       ...Object.fromEntries(
-        selectedStationsData.map((s, idx) => [
+        selectedStationsData.map((s, _) => [
           s.location,
           s.temperature,
         ])
@@ -185,7 +187,7 @@ const Compare = () => {
     {
       name: "معدل التدفق L/s",
       ...Object.fromEntries(
-        selectedStationsData.map((s, idx) => [
+        selectedStationsData.map((s, _) => [
           s.location,
           s.flowRate,
         ])
@@ -194,7 +196,7 @@ const Compare = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -227,7 +229,9 @@ const Compare = () => {
         {/* Station Selection */}
         <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-foreground">اختر المحطات للمقارنة</CardTitle>
+            <CardTitle className="text-foreground">
+              {t("compare.selectStations")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -274,11 +278,10 @@ const Compare = () => {
             <CardContent className="flex flex-col items-center justify-center py-16 text-center">
               <BarChart3 className="w-16 h-16 text-primary mb-4 opacity-50" />
               <h3 className="text-xl font-bold text-foreground mb-2">
-                اختر محطتين على الأقل
+                {t("compare.selectAtLeast")}
               </h3>
               <p className="text-muted-foreground max-w-md">
-                قم باختيار محطتين أو أكثر من القائمة أعلاه لبدء المقارنة ورؤية
-                التحليلات المفصلة
+                {t("compare.selectMessage")}
               </p>
             </CardContent>
           </Card>
@@ -321,7 +324,7 @@ const Compare = () => {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-muted-foreground">الكفاءة</span>
-                      <span className="text-lg font-bold text-success">
+                      <span className="text-lg font-bold text-green-600">
                         {station.efficiency}%
                       </span>
                     </div>
@@ -336,7 +339,7 @@ const Compare = () => {
                 <CardHeader>
                   <CardTitle className="text-foreground flex items-center gap-2">
                     <BarChart3 className="w-5 h-5 text-primary" />
-                    مقارنة المقاييس الرئيسية
+                    {t("compare.mainMetrics")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -373,13 +376,13 @@ const Compare = () => {
               <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle className="text-foreground flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5 text-success" />
-                    تحليل الأداء الشامل
+                    <TrendingUp className="w-5 h-5 text-green-600" />
+                    {t("compare.overallPerformance")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={350}>
-                    <RadarChart data={radarData[0] ? [radarData[0]] : []}>
+                    <RadarChart data={radarData}>
                       <PolarGrid stroke="hsl(var(--border))" />
                       <PolarAngleAxis
                         dataKey="station"
@@ -394,6 +397,7 @@ const Compare = () => {
                           borderRadius: "8px",
                         }}
                       />
+                      <Legend />
                       {selectedStationsData.map((station, idx) => (
                         <Radar
                           key={station.id}
@@ -411,144 +415,105 @@ const Compare = () => {
 
               <Card className="bg-card border-border lg:col-span-2">
                 <CardHeader>
-                  <CardTitle className="text-foreground flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-primary" />
-                    مقارنة الأداء التفصيلية
+                  <CardTitle className="text-foreground">
+                    {t("compare.detailedTable")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={350}>
-                    <LineChart data={performanceData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis
-                        dataKey="name"
-                        stroke="hsl(var(--muted-foreground))"
-                        tick={{ fontSize: 11 }}
-                      />
-                      <YAxis stroke="hsl(var(--muted-foreground))" />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          border: "1px solid hsl(var(--border))",
-                          borderRadius: "8px",
-                        }}
-                      />
-                      <Legend />
-                      {selectedStationsData.map((station, idx) => (
-                        <Line
-                          key={station.id}
-                          type="monotone"
-                          dataKey={station.location}
-                          stroke={stationColors[idx]}
-                          strokeWidth={3}
-                          dot={{ fill: stationColors[idx], r: 5 }}
-                        />
-                      ))}
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-border">
+                          <th className="text-right py-4 px-4 text-sm font-semibold text-muted-foreground">
+                            {t("compare.metric")}
+                          </th>
+                          {selectedStationsData.map((station) => (
+                            <th
+                              key={station.id}
+                              className="text-center py-4 px-4 text-sm font-semibold text-foreground"
+                            >
+                              {station.location}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-border hover:bg-secondary/30">
+                          <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
+                            <Droplets className="w-4 h-4 text-primary" />
+                            مستوى المياه
+                          </td>
+                          {selectedStationsData.map((station) => (
+                            <td
+                              key={station.id}
+                              className="text-center py-4 px-4 text-lg font-bold text-foreground"
+                            >
+                              {station.waterLevel}%
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-b border-border hover:bg-secondary/30">
+                          <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
+                            <Gauge className="w-4 h-4 text-accent" />
+                            الضغط
+                          </td>
+                          {selectedStationsData.map((station) => (
+                            <td
+                              key={station.id}
+                              className="text-center py-4 px-4 text-lg font-bold text-foreground"
+                            >
+                              {station.pressure} بار
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-b border-border hover:bg-secondary/30">
+                          <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
+                            <Thermometer className="w-4 h-4 text-warning" />
+                            درجة الحرارة
+                          </td>
+                          {selectedStationsData.map((station) => (
+                            <td
+                              key={station.id}
+                              className="text-center py-4 px-4 text-lg font-bold text-foreground"
+                            >
+                              {station.temperature}°C
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="border-b border-border hover:bg-secondary/30">
+                          <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-success" />
+                            معدل التدفق
+                          </td>
+                          {selectedStationsData.map((station) => (
+                            <td
+                              key={station.id}
+                              className="text-center py-4 px-4 text-lg font-bold text-foreground"
+                            >
+                              {station.flowRate} L/s
+                            </td>
+                          ))}
+                        </tr>
+                        <tr className="hover:bg-secondary/30">
+                          <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-success" />
+                            {t("compare.efficiency")}
+                          </td>
+                          {selectedStationsData.map((station) => (
+                            <td
+                              key={station.id}
+                              className="text-center py-4 px-4 text-lg font-bold text-green-600"
+                            >
+                              {station.efficiency}%
+                            </td>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </CardContent>
               </Card>
             </div>
-
-            {/* Detailed Comparison Table */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-foreground">جدول المقارنة التفصيلي</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-border">
-                        <th className="text-right py-4 px-4 text-sm font-semibold text-muted-foreground">
-                          المقياس
-                        </th>
-                        {selectedStationsData.map((station) => (
-                          <th
-                            key={station.id}
-                            className="text-center py-4 px-4 text-sm font-semibold text-foreground"
-                          >
-                            {station.location}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-border hover:bg-secondary/30">
-                        <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
-                          <Droplets className="w-4 h-4 text-primary" />
-                          مستوى المياه
-                        </td>
-                        {selectedStationsData.map((station) => (
-                          <td
-                            key={station.id}
-                            className="text-center py-4 px-4 text-lg font-bold text-foreground"
-                          >
-                            {station.waterLevel}%
-                          </td>
-                        ))}
-                      </tr>
-                      <tr className="border-b border-border hover:bg-secondary/30">
-                        <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
-                          <Gauge className="w-4 h-4 text-accent" />
-                          الضغط
-                        </td>
-                        {selectedStationsData.map((station) => (
-                          <td
-                            key={station.id}
-                            className="text-center py-4 px-4 text-lg font-bold text-foreground"
-                          >
-                            {station.pressure} بار
-                          </td>
-                        ))}
-                      </tr>
-                      <tr className="border-b border-border hover:bg-secondary/30">
-                        <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
-                          <Thermometer className="w-4 h-4 text-warning" />
-                          درجة الحرارة
-                        </td>
-                        {selectedStationsData.map((station) => (
-                          <td
-                            key={station.id}
-                            className="text-center py-4 px-4 text-lg font-bold text-foreground"
-                          >
-                            {station.temperature}°C
-                          </td>
-                        ))}
-                      </tr>
-                      <tr className="border-b border-border hover:bg-secondary/30">
-                        <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
-                          <Activity className="w-4 h-4 text-success" />
-                          معدل التدفق
-                        </td>
-                        {selectedStationsData.map((station) => (
-                          <td
-                            key={station.id}
-                            className="text-center py-4 px-4 text-lg font-bold text-foreground"
-                          >
-                            {station.flowRate} L/s
-                          </td>
-                        ))}
-                      </tr>
-                      <tr className="hover:bg-secondary/30">
-                        <td className="py-4 px-4 text-sm text-muted-foreground flex items-center gap-2">
-                          <TrendingUp className="w-4 h-4 text-success" />
-                          الكفاءة
-                        </td>
-                        {selectedStationsData.map((station) => (
-                          <td
-                            key={station.id}
-                            className="text-center py-4 px-4 text-lg font-bold text-success"
-                          >
-                            {station.efficiency}%
-                          </td>
-                        ))}
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
           </>
         )}
       </div>
@@ -556,4 +521,11 @@ const Compare = () => {
   );
 };
 
-export default Compare;
+// يتم تغيير الـ Export لتطبيق الحماية
+const CompareWrapper = () => (
+  <OTPGate resourceName="صفحة مقارنة المحطات">
+    <CompareContent />
+  </OTPGate>
+);
+
+export default CompareWrapper;
